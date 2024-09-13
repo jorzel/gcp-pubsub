@@ -56,12 +56,12 @@ class GCPPublisherClient:
         self._logger.info("Message published successfully", r=r)
 
 
-@app.route('/reservation', methods=['POST'])
-def create_reservation(self):
-    publisher_client = GCPPublisherClient(PROJECT_ID, TOPIC_ID, credentials_pub)
+# @app.route('/reservation', methods=['POST'])
+# def create_reservation(self):
+publisher_client = GCPPublisherClient(PROJECT_ID, TOPIC_ID, credentials_pub)
 
-    # some logic checking if reservation can be created
+# some logic checking if reservation can be created
 
-    event = ReservationCreatedEvent(str(uuid.uuid4()))
-    publisher_client.publish(event)
-    return "Reservation created", 201
+event = ReservationCreatedEvent(str(uuid.uuid4()))
+publisher_client.publish(event)
+# return "Reservation created", 201
