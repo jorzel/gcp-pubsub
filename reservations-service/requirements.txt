@@ -1,2 +1,3 @@
 Flask==3.0.3
 google-cloud-pubsub==2.23.1
+structlog==24.4.0

@@ -1,4 +1,5 @@
 import json
+import os
 
 import structlog
 from google.auth import jwt
@@ -7,7 +8,7 @@ from google.cloud import pubsub_v1
 CREDENTIALS_FILE = "credentials.json"
 AUDIENCE = "https://pubsub.googleapis.com/google.pubsub.v1.Subscriber"
 PROJECT_ID = 'virtual-cycling-435506-d8'
-SUBSCRIPTION_ID = 'reservation-created-sub'
+SUBSCRIPTION_ID = os.getenv('SUBSCRIPTION_ID')
 
 subscription_name = 'projects/{project_id}/subscriptions/{sub}'.format(
     project_id=PROJECT_ID,
