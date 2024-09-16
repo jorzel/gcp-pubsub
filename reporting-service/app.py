@@ -7,7 +7,7 @@ from google.cloud import pubsub_v1
 
 CREDENTIALS_FILE = "credentials.json"
 AUDIENCE = "https://pubsub.googleapis.com/google.pubsub.v1.Subscriber"
-PROJECT_ID = 'virtual-cycling-435506-d8'
+PROJECT_ID = os.environ.get('PROJECT_ID')
 SUBSCRIPTION_ID = os.getenv('SUBSCRIPTION_ID')
 
 subscription_name = 'projects/{project_id}/subscriptions/{sub}'.format(

@@ -1,4 +1,5 @@
 import json
+import os
 import uuid
 from datetime import datetime
 
@@ -10,8 +11,8 @@ from google.cloud import pubsub_v1
 
 CREDENTIALS_FILE = "credentials.json"
 AUDIENCE = "https://pubsub.googleapis.com/google.pubsub.v1.Publisher"
-PROJECT_ID = 'virtual-cycling-435506-d8'
-TOPIC_ID = 'reservation-created'
+PROJECT_ID = os.environ.get('PROJECT_ID')
+TOPIC_ID = os.getenv('TOPIC_ID')
 
 service_account_info = json.load(open(CREDENTIALS_FILE))
 credentials = jwt.Credentials.from_service_account_info(
@@ -56,12 +57,12 @@ class GCPPublisherClient:
         self._logger.info("Message published successfully", r=r)
 
 
-# @app.route('/reservation', methods=['POST'])
-# def create_reservation(self):
-publisher_client = GCPPublisherClient(PROJECT_ID, TOPIC_ID, credentials_pub)
+@app.route('/reservations', methods=['POST'])
+def create_reservation():
+    publisher_client = GCPPublisherClient(PROJECT_ID, TOPIC_ID, credentials_pub)
 
-# some logic checking if reservation can be created
+    # some logic checking if reservation can be created
 
-event = ReservationCreatedEvent(str(uuid.uuid4()))
-publisher_client.publish(event)
-# return "Reservation created", 201
+    event = ReservationCreatedEvent(str(uuid.uuid4()))
+    publisher_client.publish(event)
+    return "Reservation created", 201

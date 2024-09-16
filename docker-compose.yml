@@ -1,24 +1,34 @@
 version: "3.7"
 
 services:
+  reservations-service:
+    image: reservations-service:v0
+    ports:
+      - "8080:8080"
+    environment:
+      - TOPIC_ID=reservation-created
+      - PROJECT_ID=virtual-cycling-435506-d8
+    volumes:
+      - ./reservations-service/credentials.json:/credentials.json
+
   reporting-service:
     image: reporting-service:v0
     deploy:
       mode: replicated
       replicas: 2
-
     environment:
       - SUBSCRIPTION_ID=reservation-created-sub
+      - PROJECT_ID=virtual-cycling-435506-d8
     volumes:
       - ./reporting-service/credentials.json:/credentials.json
 
-  other-service:
+  insigths-service:
     image: reporting-service:v0
     deploy:
       mode: replicated
       replicas: 1
-
     environment:
       - SUBSCRIPTION_ID=reservation-created-sub-2
+      - PROJECT_ID=virtual-cycling-435506-d8
     volumes:
       - ./reporting-service/credentials.json:/credentials.json
