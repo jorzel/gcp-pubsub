@@ -5,20 +5,12 @@ from datetime import datetime
 
 import structlog
 from flask import Flask
-from google.auth import jwt
 from google.cloud import pubsub_v1
 
 
-CREDENTIALS_FILE = "credentials.json"
-AUDIENCE = "https://pubsub.googleapis.com/google.pubsub.v1.Publisher"
 PROJECT_ID = os.environ.get('PROJECT_ID')
 TOPIC_ID = os.getenv('TOPIC_ID')
 
-service_account_info = json.load(open(CREDENTIALS_FILE))
-credentials = jwt.Credentials.from_service_account_info(
-    service_account_info, audience=AUDIENCE,
-)
-credentials_pub = credentials.with_claims(audience=AUDIENCE)
 
 app = Flask(__name__)
 
@@ -38,12 +30,12 @@ class ReservationCreatedEvent:
 
 
 class GCPPublisherClient:
-    def __init__(self, google_cloud_project, topic_id, credentials):
+    def __init__(self, google_cloud_project, topic_id):
         """
             :param google_cloud_project: Google project ID
             :param topic_id: Topic ID
         """
-        self._pub_client = pubsub_v1.PublisherClient(credentials=credentials_pub)
+        self._pub_client = pubsub_v1.PublisherClient()
         self._pub_topic = self._pub_client.topic_path(google_cloud_project, topic_id)
         self._logger = structlog.get_logger()
 
@@ -59,7 +51,7 @@ class GCPPublisherClient:
 
 @app.route('/reservations', methods=['POST'])
 def create_reservation():
-    publisher_client = GCPPublisherClient(PROJECT_ID, TOPIC_ID, credentials_pub)
+    publisher_client = GCPPublisherClient(PROJECT_ID, TOPIC_ID)
 
     # some logic checking if reservation can be created
 
