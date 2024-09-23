@@ -7,7 +7,7 @@ services:
       - "8080:8080"
     environment:
       - TOPIC_ID=reservation-created
-      - PROJECT_ID=virtual-cycling-435506-d8
+      - PROJECT_ID=gcp-pubsub-guide
       - GOOGLE_APPLICATION_CREDENTIALS=/credentials.json
     volumes:
       - ./reservations-service/credentials.json:/credentials.json
@@ -16,10 +16,10 @@ services:
     image: reporting-service:v0
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 3
     environment:
-      - SUBSCRIPTION_ID=reservation-created-sub
-      - PROJECT_ID=virtual-cycling-435506-d8
+      - SUBSCRIPTION_ID=reservation-created-subscription
+      - PROJECT_ID=gcp-pubsub-guide
     volumes:
       - ./reporting-service/credentials.json:/credentials.json
 
@@ -29,7 +29,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      - SUBSCRIPTION_ID=reservation-created-sub-2
-      - PROJECT_ID=virtual-cycling-435506-d8
+      - SUBSCRIPTION_ID=reservation-created-subscription2
+      - PROJECT_ID=gcp-pubsub-guide
     volumes:
       - ./reporting-service/credentials.json:/credentials.json
